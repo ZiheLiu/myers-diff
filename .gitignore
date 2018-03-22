@@ -1,0 +1,9 @@
+# idea
+myersdiff.iml
+.idea/
+
+# java
+target/
+
+# mac
+.DS_Store
