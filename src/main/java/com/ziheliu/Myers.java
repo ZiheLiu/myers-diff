@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Myters {
+public class Myers {
   private String[] oldLines;
   private String[] newLines;
 
@@ -16,7 +16,7 @@ public class Myters {
   private int gap;
   private int pathLen;
 
-  public Myters(String[] oldLines, String[] newLines) {
+  public Myers(String[] oldLines, String[] newLines) {
     this.oldLines = oldLines;
     this.newLines = newLines;
   }
@@ -30,7 +30,7 @@ public class Myters {
   }
 
   /**
-   * Execute algorithm Myters.
+   * Execute algorithm Myers.
    * <code>pathLen</code> is the sum of path steps.
    * <code>gap = x - y</code>, where x and y are refer to the end point.
    * @return int: the sum of different lines between oldString and newString.

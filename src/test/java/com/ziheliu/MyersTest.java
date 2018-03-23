@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class MytersTest {
+public class MyersTest {
   @Test
   public void diffTestWithTwoSameString() {
     String oldString = "A\nB\nC";
@@ -15,11 +15,11 @@ public class MytersTest {
     String[] oldLines = oldString.split("\n");
     String[] newLines = newString.split("\n");
 
-    Myters myters = new Myters(oldLines, newLines);
-    int pathLen = myters.diff();
+    Myers myers = new Myers(oldLines, newLines);
+    int pathLen = myers.diff();
 
     Assert.assertEquals(0, pathLen);
-    Assert.assertEquals(0, myters.getPathLen());
+    Assert.assertEquals(0, myers.getPathLen());
   }
 
   @Test
@@ -30,11 +30,11 @@ public class MytersTest {
     String[] oldLines = oldString.split("\n");
     String[] newLines = newString.split("\n");
 
-    Myters myters = new Myters(oldLines, newLines);
-    int pathLen = myters.diff();
+    Myers myers = new Myers(oldLines, newLines);
+    int pathLen = myers.diff();
 
     Assert.assertEquals(2, pathLen);
-    Assert.assertEquals(2, myters.getPathLen());
+    Assert.assertEquals(2, myers.getPathLen());
   }
 
   @Test
@@ -45,11 +45,11 @@ public class MytersTest {
     String[] oldLines = oldString.split("\n");
     String[] newLines = newString.split("\n");
 
-    Myters myters = new Myters(oldLines, newLines);
-    int pathLen = myters.diff();
+    Myers myers = new Myers(oldLines, newLines);
+    int pathLen = myers.diff();
 
     Assert.assertEquals(1, pathLen);
-    Assert.assertEquals(1, myters.getPathLen());
+    Assert.assertEquals(1, myers.getPathLen());
   }
 
   @Test
@@ -60,9 +60,9 @@ public class MytersTest {
     String[] oldLines = oldString.split("\n");
     String[] newLines = newString.split("\n");
 
-    Myters myters = new Myters(oldLines, newLines);
-    myters.diff();
-    List<Node> path = myters.getPath();
+    Myers myers = new Myers(oldLines, newLines);
+    myers.diff();
+    List<Node> path = myers.getPath();
 
     List<Node> expectedPath = new ArrayList<>();
     expectedPath.add(new Node(0, 0));
@@ -84,9 +84,9 @@ public class MytersTest {
     expectedPath.add(new Node(3, 2));
     expectedPath.add(new Node(3, 3));
 
-    Myters myters = new Myters(oldLines, newLines);
-    myters.diff();
-    List<Node> path = myters.getPath();
+    Myers myers = new Myers(oldLines, newLines);
+    myers.diff();
+    List<Node> path = myers.getPath();
 
     Assert.assertEquals(expectedPath, path);
   }
@@ -104,9 +104,9 @@ public class MytersTest {
     expectedPath.add(new Node(3, 3));
     expectedPath.add(new Node(3, 4));
 
-    Myters myters = new Myters(oldLines, newLines);
-    myters.diff();
-    List<Node> path = myters.getPath();
+    Myers myers = new Myers(oldLines, newLines);
+    myers.diff();
+    List<Node> path = myers.getPath();
 
     Assert.assertEquals(expectedPath, path);
   }

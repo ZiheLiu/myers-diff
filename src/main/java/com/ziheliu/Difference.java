@@ -28,10 +28,10 @@ public class Difference {
    * Show diff in the console between oldString and new String.
    */
   public String getDiffString() {
-    Myters myters = new Myters(oldLines, newLines);
-    myters.diff();
+    Myers myers = new Myers(oldLines, newLines);
+    myers.diff();
 
-    List<Node> path = myters.getPath();
+    List<Node> path = myers.getPath();
 
     return this.getDiffString(oldLines, newLines, path);
   }
