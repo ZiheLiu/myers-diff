@@ -7,13 +7,9 @@ public class Main {
    */
   public static void main(String[] args) {
     String oldString = "A\nB\nC";
-    String newString = "A\nB\nC";
+    String newString = "B\nC\nD";
 
-    String[] oldLines = oldString.split("\n");
-    String[] newLines = newString.split("\n");
-
-    Myters myters = new Myters(oldLines, newLines);
-    myters.diff();
-    System.out.println(myters.getPathLen());
+    Difference difference = new Difference(oldString, newString);
+    System.out.println(difference.getDiffString());
   }
 }
