@@ -16,6 +16,14 @@ public class Difference {
     this.newLines = newString.split("\n");
   }
 
+  public String[] getOldLines() {
+    return oldLines;
+  }
+
+  public String[] getNewLines() {
+    return newLines;
+  }
+
   /**
    * Show diff in the console between oldString and new String.
    */
