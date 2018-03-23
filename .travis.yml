@@ -1,0 +1,14 @@
+language: java
+jdk:
+  - oraclejdk8
+before_install:
+  - "echo skipped"
+install:
+  - mvn install
+script:
+  - mvn clean
+  - mvn package
+notifications:
+  email:
+    recipients:
+      - ziheliu1024@gmail.com
