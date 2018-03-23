@@ -45,6 +45,41 @@ public class DifferenceTest {
     Assert.assertEquals(expectedDiffString, diffString);
   }
 
+  @Test
+  public void getDiffStringTestWithNoSame() {
+    String oldString = "A\nB\nC\n";
+    String newString = "D\nE\nF\n";
+
+    Difference difference = new Difference(oldString, newString);
+    String diffString = difference.getDiffString();
+
+    String expectedDiffString = this.getStringWithRed("-\tA") + "\n"
+        + this.getStringWithRed("-\tB") + "\n"
+        + this.getStringWithRed("-\tC") + "\n"
+        + this.getStringWithGreen("+\tD") + "\n"
+        + this.getStringWithGreen("+\tE") + "\n"
+        + this.getStringWithGreen("+\tF") + "\n";
+    Assert.assertEquals(expectedDiffString, diffString);
+  }
+
+  @Test
+  public void getDiffStringTestComplex() {
+    String oldString = "A\nB\nM\nA\nB\n";
+    String newString = "M\nA\nB\nN\nA\nB\n";
+
+    Difference difference = new Difference(oldString, newString);
+    String diffString = difference.getDiffString();
+
+    String expectedDiffString = this.getStringWithGreen("+\tM") + "\n"
+        + "\tA\n"
+        + "\tB\n"
+        + this.getStringWithRed("-\tM") + "\n"
+        + this.getStringWithGreen("+\tN") + "\n"
+        + "\tA\n"
+        + "\tB\n";
+    Assert.assertEquals(expectedDiffString, diffString);
+  }
+
 
 
   private String getStringWithRed(String str) {

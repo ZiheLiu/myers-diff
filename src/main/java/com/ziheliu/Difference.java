@@ -61,15 +61,14 @@ public class Difference {
         posY++;
       }
 
-      for (;
-           posX <= node.getCoordinateX() && posY <= node.getCoordinateY()
-               && posX < oldLines.length && posY < newLines.length;
-           posX++, posY++) {
+      for (; posX < node.getCoordinateX() && posY < node.getCoordinateY()
+          && posX < oldLines.length && posY < newLines.length; posX++, posY++) {
         stringBuilder
             .append("\t")
             .append(oldLines[posX])
             .append("\n");
       }
+
       prevNode = node;
     }
     return stringBuilder.toString();

@@ -89,7 +89,7 @@ public class Myters {
     path.add(node);
 
     for (int curPathLen = this.pathLen;
-         curPathLen > 0 && node.getCoordinateX() > 0 && node.getCoordinateY() > 0; curPathLen--) {
+         curPathLen > 0 && node.getCoordinateX() >= 0 && node.getCoordinateY() >= 0; curPathLen--) {
       MyArray prevColumn = this.graph[curPathLen - 1];
 
       int gap = node.getCoordinateX() - node.getCoordinateY();
