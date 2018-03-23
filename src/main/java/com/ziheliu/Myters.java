@@ -1,5 +1,9 @@
 package com.ziheliu;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Myters {
   private String[] oldLines;
   private String[] newLines;
@@ -72,6 +76,43 @@ public class Myters {
     }
 
     return -1;
+  }
+
+  /**
+   * According to <code>this.graph</code>, get node list.
+   * @return return node list from (0, 0) to (oldLines.length, newLines.length).
+   */
+  public List<Node> getPath() {
+    List<Node> path = new ArrayList<>();
+
+    Node node = new Node(this.oldLines.length, this.newLines.length);
+    path.add(node);
+
+    for (int curPathLen = this.pathLen;
+         curPathLen > 0 && node.getCoordinateX() > 0 && node.getCoordinateY() > 0; curPathLen--) {
+      MyArray prevColumn = this.graph[curPathLen - 1];
+
+      int gap = node.getCoordinateX() - node.getCoordinateY();
+
+      boolean down = (gap == -curPathLen)
+          || (gap != pathLen
+          && prevColumn.get(gap - 1) < prevColumn.get(gap + 1));
+
+      int prevGap = down ? gap + 1 : gap - 1;
+
+      int xstart = prevColumn.get(prevGap);
+      int ystart = xstart - prevGap;
+
+      node = new Node(xstart, ystart);
+      path.add(node);
+    }
+
+    if (node.getCoordinateY() != 0 || node.getCoordinateX() != 0) {
+      path.add(new Node(0, 0));
+    }
+
+    Collections.reverse(path);
+    return path;
   }
 
   /**
