@@ -4,7 +4,11 @@ public class Myters {
   private String[] oldLines;
   private String[] newLines;
 
-  private MyArray mapGapToX;
+  /**
+   * Two dimensional array[x][y].
+   * X is pathLen, and y is gap.
+   */
+  private MyArray[] graph;
   private int gap;
   private int pathLen;
 
@@ -30,17 +34,26 @@ public class Myters {
   public int diff() {
     int totalLength = this.oldLines.length + this.newLines.length;
 
-    this.mapGapToX = new MyArray(totalLength + 1);
+    this.graph = new MyArray[totalLength + 1];
+    for (int i = 0; i < this.graph.length; i++) {
+      this.graph[i] = new MyArray(totalLength + 1);
+    }
 
     for (int pathLen = 0; pathLen <= totalLength; pathLen++) {
+      MyArray column = this.graph[pathLen];
+
       for (int gap = -pathLen; gap <= pathLen; gap += 2) {
+        MyArray prevColumn = pathLen > 0
+            ? this.graph[pathLen - 1]
+            : new MyArray(totalLength + 1);
+
         boolean down = (gap == -pathLen)
             || (gap != pathLen
-                && this.mapGapToX.get(gap - 1) < this.mapGapToX.get(gap + 1));
+            && prevColumn.get(gap - 1) < prevColumn.get(gap + 1));
 
         int prevGap = down ? gap + 1 : gap - 1;
 
-        int xstart = this.mapGapToX.get(prevGap);
+        int xstart = prevColumn.get(prevGap);
 
         int xend = down ? xstart : xstart + 1;
         int yend = xend - gap;
@@ -48,7 +61,7 @@ public class Myters {
         xend = this.walkDiagonal(xend, yend);
         yend = xend - gap;
 
-        this.mapGapToX.set(gap, xend);
+        column.set(gap, xend);
 
         if (xend >= this.oldLines.length && yend >= this.newLines.length) {
           this.gap = gap;
