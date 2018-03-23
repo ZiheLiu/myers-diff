@@ -1,7 +1,7 @@
 #!/bin/sh
 
-echo "pre-commit: run \033[33mmvn clean package\033[0m."
-mvn clean package
+echo "pre-commit: run \033[33mmvn clean test\033[0m."
+mvn clean test
 
 RESULT=$?
 
