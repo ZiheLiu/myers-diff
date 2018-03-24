@@ -21,7 +21,7 @@ public class Main {
 
     String oldString;
     try {
-      oldString = FileUtil.getStringFromFile(oldFilename);
+      oldString = FileUtil.readToString(oldFilename);
     } catch (IOException exception) {
       System.out.println("Can't find file: " + oldFilename);
       return;
@@ -29,7 +29,7 @@ public class Main {
 
     String newString;
     try {
-      newString = FileUtil.getStringFromFile(newFilename);
+      newString = FileUtil.readToString(newFilename);
     } catch (IOException exception) {
       System.out.println("Can't find file: " + oldFilename);
       return;

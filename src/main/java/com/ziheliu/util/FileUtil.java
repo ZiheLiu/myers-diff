@@ -1,7 +1,7 @@
 package com.ziheliu.util;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public final class FileUtil {
@@ -11,16 +11,17 @@ public final class FileUtil {
    * @return The whole char reading from filename.
    * @throws IOException Exception.
    */
-  public static String getStringFromFile(String filename) throws IOException {
-    BufferedReader fileReader = new BufferedReader(new FileReader(filename));
+  public static String readToString(String filename) throws IOException {
+    String encoding = "UTF-8";
+    File file = new File(filename);
 
-    String line;
-    StringBuilder stringBuilder = new StringBuilder();
+    Long fileLength = file.length();
+    byte[] fileContent = new byte[fileLength.intValue()];
 
-    while ((line = fileReader.readLine()) != null) {
-      stringBuilder.append(line).append("\n");
-    }
+    FileInputStream fileInputStream = new FileInputStream(file);
+    fileInputStream.read(fileContent);
+    fileInputStream.close();
 
-    return stringBuilder.toString();
+    return new String(fileContent, encoding);
   }
 }
