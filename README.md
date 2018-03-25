@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/ZiheLiu/myers-diff.svg?branch=master)](https://travis-ci.org/ZiheLiu/myers-diff)
 
 A shell tool to diff two files based with algorithm Myers.
+Here is the brief note of [Myers](https://github.com/ZiheLiu/myers-diff/blob/master/static/Myers.md).
 
 ## Sample
 ### old file
