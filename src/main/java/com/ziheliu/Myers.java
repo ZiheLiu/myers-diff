@@ -2,23 +2,33 @@ package com.ziheliu;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Myers {
   private String[] oldLines;
   private String[] newLines;
 
   /**
-   * Two dimensional array[x][y].
-   * X is pathLen, and y is gap.
+   * Map currNode to prevNode.
+   * int currNodeInt = currNodeInt.getX() * totalLength + currNodeInt.getY();
+   * int prevNodeInt = prevNode.getX() * totalLength + prevNode.getY();
    */
-  private MyArray[] graph;
+  private Map<Integer, Integer> prevNode;
   private int gap;
   private int pathLen;
 
+
+  /**
+   * Constructor of Myers.
+   * @param oldLines String[].
+   * @param newLines String[].
+   */
   public Myers(String[] oldLines, String[] newLines) {
     this.oldLines = oldLines;
     this.newLines = newLines;
+    this.prevNode = new HashMap<>();
   }
 
   public int getGap() {
@@ -36,38 +46,41 @@ public class Myers {
    * @return int: the sum of different lines between oldString and newString.
    */
   public int diff() {
-    int totalLength = this.oldLines.length + this.newLines.length;
+    int totalLength = this.oldLines.length + this.newLines.length + 1;
 
-    this.graph = new MyArray[totalLength + 1];
-    for (int i = 0; i < this.graph.length; i++) {
-      this.graph[i] = new MyArray(totalLength + 1);
-    }
+    MyArray mapGapToX = new MyArray(totalLength);
 
     for (int pathLen = 0; pathLen <= totalLength; pathLen++) {
-      MyArray column = this.graph[pathLen];
-
       for (int gap = -pathLen; gap <= pathLen; gap += 2) {
-        MyArray prevColumn = pathLen > 0
-            ? this.graph[pathLen - 1]
-            : new MyArray(totalLength + 1);
+        int prevX;
+        int prevY;
+        int currX;
+        int currY;
+        if (pathLen == 0) {
+          prevY = prevX = 0;
+          currY = currX = this.walkDiagonal(prevX, prevY);
+        } else {
+          final boolean down = (gap == -pathLen)
+              || (gap != pathLen
+              && mapGapToX.get(gap - 1) < mapGapToX.get(gap + 1));
 
-        boolean down = (gap == -pathLen)
-            || (gap != pathLen
-            && prevColumn.get(gap - 1) < prevColumn.get(gap + 1));
+          final int prevGap = down ? gap + 1 : gap - 1;
 
-        int prevGap = down ? gap + 1 : gap - 1;
+          prevX = mapGapToX.get(prevGap);
+          prevY = prevX - prevGap;
 
-        int xstart = prevColumn.get(prevGap);
+          currX = down ? prevX : prevX + 1;
+          currY = currX - gap;
 
-        int xend = down ? xstart : xstart + 1;
-        int yend = xend - gap;
+          currX = this.walkDiagonal(currX, currY);
+          currY = currX - gap;
+        }
 
-        xend = this.walkDiagonal(xend, yend);
-        yend = xend - gap;
+        mapGapToX.set(gap, currX);
 
-        column.set(gap, xend);
+        this.prevNode.put(currX * totalLength + currY, prevX * totalLength + prevY);
 
-        if (xend >= this.oldLines.length && yend >= this.newLines.length) {
+        if (currX >= this.oldLines.length && currY >= this.newLines.length) {
           this.gap = gap;
           this.pathLen = pathLen;
           return this.pathLen;
@@ -79,36 +92,28 @@ public class Myers {
   }
 
   /**
-   * According to <code>this.graph</code>, get node list.
+   * According to <code>this.prevNode</code>, get node list.
    * @return return node list from (0, 0) to (oldLines.length, newLines.length).
    */
   public List<Node> getPath() {
     List<Node> path = new ArrayList<>();
 
+    int totalLength = this.oldLines.length + this.newLines.length + 1;
+
     Node node = new Node(this.oldLines.length, this.newLines.length);
     path.add(node);
 
-    for (int curPathLen = this.pathLen;
-         curPathLen > 0 && node.getCoordinateX() >= 0 && node.getCoordinateY() >= 0; curPathLen--) {
-      MyArray prevColumn = this.graph[curPathLen - 1];
+    // (node.x >= 0 && node.y > 0) || (node.x > 0 && node.y >= 0)
+    // node.x and node.y are both greater or equal to 0.
+    // But they cannot be equal to 0 in the meanwhile.
+    for (; node.getCoordinateX() >= 0 && node.getCoordinateY() >= 0
+        && (node.getCoordinateY() + node.getCoordinateX() > 0); ) {
+      int prevNode = this.prevNode.get(node.getCoordinateX() * totalLength + node.getCoordinateY());
+      int prevX = prevNode / totalLength;
+      int prevY = prevNode % totalLength;
 
-      int gap = node.getCoordinateX() - node.getCoordinateY();
-
-      boolean down = (gap == -curPathLen)
-          || (gap != pathLen
-          && prevColumn.get(gap - 1) < prevColumn.get(gap + 1));
-
-      int prevGap = down ? gap + 1 : gap - 1;
-
-      int xstart = prevColumn.get(prevGap);
-      int ystart = xstart - prevGap;
-
-      node = new Node(xstart, ystart);
+      node = new Node(prevX, prevY);
       path.add(node);
-    }
-
-    if (node.getCoordinateY() != 0 || node.getCoordinateX() != 0) {
-      path.add(new Node(0, 0));
     }
 
     Collections.reverse(path);
@@ -117,18 +122,18 @@ public class Myers {
 
   /**
    * Walk through diagonal as far as we can, because the path through diagonal is 0.
-   * @param xstart the x coordinate.
-   * @param ystart the y coordinate.
+   * @param currX the x coordinate.
+   * @param currY the y coordinate.
    * @return the x coordinate after walking through diagonal.
    */
-  private int walkDiagonal(int xstart, int ystart) {
-    while (this.checkBoundary(xstart, this.oldLines.length)
-        && this.checkBoundary(ystart, this.newLines.length)
-        && this.oldLines[xstart].equals(this.newLines[ystart])) {
-      xstart++;
-      ystart++;
+  private int walkDiagonal(int currX, int currY) {
+    while (this.checkBoundary(currX, this.oldLines.length)
+        && this.checkBoundary(currY, this.newLines.length)
+        && this.oldLines[currX].equals(this.newLines[currY])) {
+      currX++;
+      currY++;
     }
-    return xstart;
+    return currX;
   }
 
   /**
